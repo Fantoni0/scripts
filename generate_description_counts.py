@@ -1,3 +1,4 @@
+#!/home/anlarflo/miniconda2/bin/python
 # Dummy script to generate number of descriptions (target sentences) that correspond to each source sentence
 # It assumes one training sentence just have one reference.
 # Useful when using conditional nmt (https://github.com/Fantoni0/TMA)
