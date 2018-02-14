@@ -1,3 +1,4 @@
+#!/home/anlarflo/miniconda2/bin/python
 # -*- coding: utf-8 -*-
 # It computes the average/median/mode length of a dataset
 # fantoni[o|0] (4/7/17)
