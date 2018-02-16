@@ -42,7 +42,7 @@ for idx, s in enumerate(['training', 'dev', 'test']):
 	faux = open(d+'/'+s+'.'+source, 'r')
 	size_lines = len(faux.readlines())
 	faux.close()
-        rindexes = random.sample([i for i in xrange(size_lines)], lines[idx])
+        rindexes = random.sample([i for i in xrange(size_lines)], lines[idx])	# Random indexes for extracting random lines
 	for l in [source, target[idx2]]:                      
             f = open(d+'/'+s+'.'+l, 'r')
             fl = f.readlines()                
@@ -52,8 +52,12 @@ for idx, s in enumerate(['training', 'dev', 'test']):
             else:
                 tar_lines = tar_lines + fl
             f.close()
-    fout1 = open(s+'.src','a')
-    fout2 = open(s+'.trg','a')
+    lfile = len(source_lines)
+    rindexes = random.sample([i for i in xrange(lfile)], lfile)
+    source_lines = [source_lines[i] for i in rindexes]
+    tar_lines = [tar_lines[i] for i in rindexes]
+    fout1 = open(s+'.src','w')
+    fout2 = open(s+'.trg','w')
     fout1.writelines(source_lines)
     fout2.writelines(tar_lines)
     fout1.close()
