@@ -1,4 +1,4 @@
-#!/home/anlarflo/miniconda2/bin/python
+#!/home/fantonio/miniconda2/bin/python
 # -*- coding: utf-8 -*-
 # It computes the average/median/mode length of a dataset
 # fantoni[o|0] (4/7/17)
@@ -44,23 +44,26 @@ def getMedianMode(data):
     # Mode
     mode = sorted(hist.items(), key=operator.itemgetter(1))[-1][0]
     #print(hist) 
-    return median, mode      
+
+    #Max Value
+    maxv = sortHist[-1][0]
+    return median, mode, maxv      
 
 
 # Stats
 
-print("{:10}\t {:10} \t {:10} \t {:10} \t {:10} \t {:10} \t {:10} ".format("Set", "Avg. Sentences", "Avg. Words", "Median Sent.", "Median Word.", "Mod Sent.", "Mod Word."))
-print("==================================================================================================================")
+print("{:10}\t {:10} \t {:10} \t {:10} \t {:10} \t {:10} \t {:10}\t {:10} \t {:10} ".format("Set", "Avg. Sentences", "Median Sent.", "Mod Sent.", "Max. Sent,", "Avg. Words", "Median Word.", "Mod Word.", "Max. Word"))
+print("===================================================================================================================================================")
 for f in ['training', 'dev', 'test']:
     currentF = open(dPath+'/'+f+'.'+source, 'r')
     sentences = currentF.readlines()
     sentences = [s.split() for s in sentences]
     lengthSent = sum([len(l) for l in sentences])/float(len(sentences))
-    medSent, modSent = getMedianMode(sentences)
+    medSent, modSent, maxSent = getMedianMode(sentences)
     currentF.close(); currentF = open(dPath+'/'+f+'.'+source, 'r')
     text = currentF.read().split()
     text = [t.decode('utf-8') for t in text]
-    medWord, modWord = getMedianMode(text)
+    medWord, modWord, maxWord = getMedianMode(text)
     lengthWord = sum([len(w) for w in text])/float(len(text))
-    print("{:10}\t {:.2f}\t\t\t {:.2f} \t\t {:2d} \t\t {:2d} \t\t {:2d} \t\t {:2d} ".format(f, lengthSent, lengthWord, medSent, medWord, modSent, modWord ))
+    print("{:10}\t {:.2f}\t\t\t {:2d} \t\t {:2d} \t\t {:2d} \t\t {:.2f} \t\t {:2d}\t\t {:2d} \t\t {:2d} ".format(f, lengthSent, medSent, modSent, maxSent, lengthWord, medWord, modWord, maxWord ))
 
