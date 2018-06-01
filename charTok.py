@@ -1,4 +1,4 @@
-#!/home/fantonio/anaconda2/bin/python
+#!/home/fantonio/miniconda2/bin/python
 import argparse
 import sys
 
@@ -30,9 +30,10 @@ both = args.bo
 def tokSentence(sentence):
     outsentence = ""
     for w in sentence.split():
-        outsentence += w+'|'
+	w = unicode(w,'utf-8')
+        outsentence += w+u'|'
         for c in w:
-            outsentence += c+'_'
+            outsentence += c+u'_'
         outsentence = outsentence[:-1]  # Remove last _
         outsentence += ' '
     return outsentence.strip()+'\n'
@@ -45,6 +46,6 @@ for st in sides:
         targetF = open(dPath+'/plusChar/'+f+'.'+st, 'w')
         sentences = currentF.readlines()
         for s in sentences:
-            targetF.write(tokSentence(s))
+            targetF.write(tokSentence(s).encode('utf-8'))
         currentF.close();
         targetF.close();
