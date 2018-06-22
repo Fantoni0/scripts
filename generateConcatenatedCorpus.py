@@ -21,14 +21,13 @@ parser.add_argument('-t', '--target', type=str, help="Target languages of the sp
 # Get parameters
 args = parser.parse_args()
 dataset =  args.dataset
-sent = args.sentences
+n = args.sentences
 source = args.source
 target = args.target
 
 # Create Folder
-folderName = 'concatenated-%d' %  sent
-createFolder = 'mkdir -p %s/%s' % (dataset, folderName)
-#subprocess.call(createFolder, shell=False)
+folderName = 'concatenated-%d' %  n
+subprocess.call(['mkdir', '-p', '%s/%s' % (dataset, folderName) ], shell=False)
 
 # Concatenate sentences
 for idx, s in enumerate(['training', 'dev', 'test']):
@@ -37,9 +36,9 @@ for idx, s in enumerate(['training', 'dev', 'test']):
 	fo = open(dataset+'/'+folderName+'/'+s+'.'+l, 'w')
         fl = f.readlines()
 	fl = [line.strip() for line in fl] # Remove \n 
-	nfl = sent*['<pad>'] + fl
+	nfl = n*['<pad>'] + fl
         for i in range(len(fl)):
-	    fo.write(' BREAK '.join(nfl[i:i+sent])+' BREAK '+''.join(fl[i])+'\n')
+	    fo.write(' BREAK '.join(nfl[i:i+n])+' BREAK '+''.join(fl[i])+'\n')
     f.close()
     fo.close()
       
