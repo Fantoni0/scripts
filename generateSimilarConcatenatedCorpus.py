@@ -43,9 +43,9 @@ for idx, s in enumerate(['training', 'dev', 'test']):
         subprocess.call(['fasttext', 'sent2vec', '-input', '%s.%s' % (s,l), '-output', 'tmp/model_%s_%s' % (s,l), '-epoch', '10', '-lr', '0.2', '-wordNgrams', '5', '-loss', 'ns', '-neg', '10', '-thread', '20', '-t', '0.00005', '-dropoutK', '6', '-bucket', '6000000'], shell=False)
         for i in range(len(fl)):
 	    if i > n+1:
-		# Load previous sentences in a file.
+		# Load previous sentences in a file. use a 30 
 		with open(dataset+'/tmp/corpora.txt', 'w') as outfile:
-		    subprocess.call(['head', '-n', '%d' % (i-1),  '%s.%s' % (s,l)], stdout=outfile, shell=False)
+		    subprocess.call(['sed', '-n', '%d,%dp;%dq' % (max(1, i-30),i-1 ,i),  '%s.%s' % (s,l)], stdout=outfile, shell=False)
 
 		# Load sentence to query for most similar sentences
 		with open(dataset+'/tmp/query.txt', 'w') as outfile:
