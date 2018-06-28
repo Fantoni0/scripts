@@ -29,6 +29,8 @@ subprocess.call(['mkdir','-p', '%s' % folderName], shell=False) # Create directo
 # Concatenate sentences
 for idx, s in enumerate(['training', 'dev', 'test']):
     for l in [source, target]:
+	if s != 'training' and l == target: # Do not apply to dev and test sets of target language
+	   continue
         f = open(dataset+'/'+s+'.'+l, 'r')
 	fo = open(dataset+'/'+folderName+'/'+s+'.'+l, 'w')
         fl = f.readlines()
