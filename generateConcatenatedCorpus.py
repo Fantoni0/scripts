@@ -14,32 +14,34 @@ import random
 '''
 parser = argparse.ArgumentParser(description="Takes a route to the dataset files and computes average length of sentences and words", formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('-ds', '--dataset', type=str, help="Dataset Locations")
-parser.add_argument('-n', '--sentences', type=int, help="Number of sentences to concatenate")
-
+parser.add_argument('-n', '--next_sentences', type=int, help="Number of future sentences to concatenate (next)")
+parser.add_argument('-p', '--prev_sentences', type=int, help="Number of previous sentences to concatenate (previous)")
 parser.add_argument('-s', '--source', type=str, help="Source language of the splits")
 parser.add_argument('-t', '--target', type=str, help="Target languages of the split. Use the sema order as in datasets")
 
 # Get parameters
 args = parser.parse_args()
 dataset =  args.dataset
-n = args.sentences
+p = args.prev_sentences
+n = args.next_sentences
 source = args.source
 target = args.target
 
 # Create Folder
-folderName = 'concatenated-%d' %  n
+folderName = 'concatenated-p%d-n%d' %  (p,n)
 subprocess.call(['mkdir', '-p', '%s/%s' % (dataset, folderName) ], shell=False)
 
 # Concatenate sentences
-for idx, s in enumerate(['training', 'dev']): # We do not concatenate in the test set
+for idx, s in enumerate(['training', 'dev', 'test']): # We do not concatenate in the test set
     for l in [source, target]:                      
         f = open(dataset+'/'+s+'.'+l, 'r')
 	fo = open(dataset+'/'+folderName+'/'+s+'.'+l, 'w')
         fl = f.readlines()
 	fl = [line.strip() for line in fl] # Remove \n 
-	nfl = n*['<pad>'] + fl
+	pfl = p*['<pad>'] + fl
+	nfl = fl[1:] + n*['<pad>']
         for i in range(len(fl)):
-	    fo.write(' BREAK '.join(nfl[i:i+n])+' BREAK '+''.join(fl[i])+'\n')
+	    fo.write(' BREAK '.join(pfl[i:i+p])+' BREAK '+''.join(fl[i])+' BREAK '+ ' BREAK '.join(nfl[i:i+n]) +'\n')
     f.close()
     fo.close()
       

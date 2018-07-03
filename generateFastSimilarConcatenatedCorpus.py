@@ -36,8 +36,9 @@ subprocess.call(createFolder, shell=False)
 subprocess.call(['mkdir','-p', 'tmp'], shell=False) # Create tmp directory
 
 # Concatenate sentences
-for idx, s in enumerate(['training', 'dev']): # Do not apply concatenation to test set
+for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenation to test set
     for l in [source, target]:
+	print("Start process on %s.%s parition" % (s,l)) 
         f = open(dataset+'/'+s+'.'+l, 'r')
 	fo = open(dataset+'/'+folderName+'/'+s+'.'+l, 'w')
         fl = f.readlines()
@@ -56,10 +57,11 @@ for idx, s in enumerate(['training', 'dev']): # Do not apply concatenation to te
         fl2 = fo2.readlines()[1:-1] # Remove first line, contains log information. Last line is a \n
 	fl2 = [line.strip() for line in fl2 if line!='\n'] # Remove lines containing just \n and trim the other
 	
-	j = 0
+	j = 1
 	for i in range(len(fl)):
-	    #if i%2 != 0: # We get odd lines. Since the first liine contains the sentence itself
-	    fo.write(' BREAK '.join(fl2[j:j+n])+' BREAK '+''.join(fl[i])+'\n')
+	    #print(fl2[j:j+n])
+	    #print("The Join: ", [' '.join([ll2.split()[2:] for ll2 in fl2[j:j+n]][0])])
+	    fo.write(' BREAK '.join([' '.join([ll2.split()[2:] for ll2 in fl2[j:j+n]][0])])+' BREAK '+''.join(fl[i])+'\n')
 	    j = i + n
 	#else:j = i
 	fo.close()

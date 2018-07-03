@@ -32,7 +32,7 @@ subprocess.call(createFolder, shell=False)
 subprocess.call(['mkdir','-p', 'tmp'], shell=False) # Create tmp directory
 
 # Concatenate sentences
-for idx, s in enumerate(['training', 'dev']): # Do not apply concatenation to test set
+for idx, s in enumerate(['training', 'dev', 'test']): # Do not apply concatenation to test set
     for l in [source, target]:
         f = open(dataset+'/'+s+'.'+l, 'r')
 	fo = open(dataset+'/'+folderName+'/'+s+'.'+l, 'w')
