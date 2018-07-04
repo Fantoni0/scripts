@@ -41,7 +41,7 @@ for idx, s in enumerate(['training', 'dev', 'test']): # We do not concatenate in
 	pfl = p*['<pad>'] + fl
 	nfl = fl[1:] + n*['<pad>']
         for i in range(len(fl)):
-	    fo.write(' BREAK '.join(pfl[i:i+p])+' BREAK '+''.join(fl[i])+' BREAK '+ ' BREAK '.join(nfl[i:i+n]) +'\n')
+	    fo.write(' BREAK '.join(pfl[i:i+p])+' BREAK '+''.join(fl[i])+' BREAK '*(n>0)+ ' BREAK '.join(nfl[i:i+n]) +'\n')
     f.close()
     fo.close()
       
