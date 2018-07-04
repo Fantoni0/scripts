@@ -30,7 +30,7 @@ fo = open('/'.join(path.split('/')[:-1])+fileName+'_deconcatenated.'+fileExt , '
 fl = f.readlines()
 fl = [line.strip() for line in fl] # Remove \n
 for i in range(len(fl)):
-    spit_s = fl[i].split(' BREAK ')
+    split_s = fl[i].split(' BREAK ')
     if len(split_s) == 1:
 	fo.write(fl[i]+'\n')
     else:
