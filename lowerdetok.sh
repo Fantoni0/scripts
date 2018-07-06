@@ -1,9 +1,9 @@
 # Script to lowercase and tokenize a corpus using moses scripts
 # Requires Moses
 # fantoni[o|0]
-if [$# -lt 2]; then
-	echo "Usage: `basename $0` file language"
-	echo "Example: lowerdetok.sh training.de de"
+if [ $# -lt 3 ]; then
+	echo "Usage: `basename $0` folder file language"
+	echo "Example: lowerdetok.sh data/ training.de de"
 	exit 1
 fi
 
