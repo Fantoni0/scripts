@@ -22,10 +22,10 @@ source =  args.source
 target = args.target
 dPath = args.dataset
 
-for split in ['dev', 'test', 'training']:
+for split in ['dev', 'test']:
     flink = open(split+'_link_samples.txt','w')        
     for st in [source, target]:
-        fout = open(split+'.'+st,'w')
+        #fout = open(split+'.'+st,'w')
         print(dPath+'/'+split+'.'+st)        
         if split == 'dev':
             dom = parse(dPath+'/'+split+'.'+st)
@@ -33,6 +33,7 @@ for split in ['dev', 'test', 'training']:
             for doc in root:        
                 seg = doc.getElementsByTagName("seg");
                 for s in seg:
+                    print(s)
                     fout.write(s.firstChild.wholeText.encode('utf8').strip()+'\n')
                     if st == source: flink.write(str(int(s.getAttribute("id"))-2).strip()+'\n')
         elif split == 'test':            
@@ -61,10 +62,3 @@ for split in ['dev', 'test', 'training']:
                         else:
                             flink.write(str(idx)+'\n')
                         idx+=1
-
-
-
-
-
-
-
