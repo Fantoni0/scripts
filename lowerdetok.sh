@@ -10,6 +10,6 @@ fi
 moses=/home/fantonio/software/mosesdecoder/scripts/tokenizer
 
 mkdir -p lowercased
-${moses}/lowercase.perl -l $2 < $1 > tmp.txt
-${moses}/tokenizer.perl -l $2 -no-escape < tmp.txt > nmtTok/$2
+${moses}/lowercase.perl -l $3 < $1/$2 > tmp.txt
+${moses}/tokenizer.perl -l $3 -no-escape < tmp.txt > nmtTok/$2
 rm tmp.txt
