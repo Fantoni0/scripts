@@ -17,6 +17,7 @@ parser.add_argument('-ds', '--dataset', type=str, help="Dataset Locations")
 parser.add_argument('-n', '--sentences', type=int, help="Number of sentences to concatenate")
 parser.add_argument('-s', '--source', type=str, help="Source language of the splits")
 parser.add_argument('-t', '--target', type=str, help="Target languages of the split. Use the same order as in datasets")
+parser.add_argument('-m', '--model', type=str, help="Pre-trained model. Optional argument.")
 
 # Get parameters
 args = parser.parse_args()
@@ -24,6 +25,9 @@ dataset =  args.dataset
 n = args.sentences
 source = args.source
 target = args.target
+model = args.model
+
+b_model = model != None
 
 # Create Folder
 folderName = 'similarConcatenated-%d' % n 
@@ -40,7 +44,8 @@ for idx, s in enumerate(['training', 'dev', 'test']): # Do not apply concatenati
 	fl = [line.strip() for line in fl] # Remove \n 
 	nfl = n*['<pad>'] + fl
 	# Train Model using sent2vec
-        subprocess.call(['fasttext', 'sent2vec', '-input', '%s.%s' % (s,l), '-output', 'tmp/model_%s_%s' % (s,l), '-epoch', '10', '-lr', '0.2', '-wordNgrams', '5', '-loss', 'ns', '-neg', '10', '-thread', '20', '-t', '0.00005', '-dropoutK', '6', '-bucket', '6000000'], shell=False)
+        if not b_model:
+            subprocess.call(['fasttext', 'sent2vec', '-input', '%s.%s' % (s,l), '-output', 'tmp/model_%s_%s' % (s,l), '-epoch', '10', '-lr', '0.2', '-wordNgrams', '5', '-loss', 'ns', '-neg', '10', '-thread', '20', '-t', '0.00005', '-dropoutK', '6', '-bucket', '6000000'], shell=False)
         for i in range(len(fl)):
 	    if i > n+1:
 		# Load previous sentences in a file. use a 30 
@@ -54,7 +59,10 @@ for idx, s in enumerate(['training', 'dev', 'test']): # Do not apply concatenati
 		# Get most similar sentences in an output file
 		with open( dataset+'/tmp/query.txt', 'r') as infile:
 		    with open(dataset+'/tmp/out.txt', 'w') as outfile:
-			subprocess.call(['fasttext', 'nnSent', dataset+'/tmp/model_%s_%s.bin' % (s,l), dataset+'/tmp/corpora.txt', '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
+                        if b_model:
+                            subprocess.call(['fasttext', 'nnSent', model, dataset+'/tmp/corpora.txt', '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
+                        else:
+                            subprocess.call(['fasttext', 'nnSent', dataset+'/tmp/model_%s_%s.bin' % (s,l), dataset+'/tmp/corpora.txt', '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
 
 		# Get the n most similar sentences
 		fo2 = open('tmp/out.txt','r')
