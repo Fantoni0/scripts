@@ -56,6 +56,7 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
         with open(dataset+'/'+s+'.'+l, 'r') as infile:
             with open(dataset+'/tmp/out.txt', 'w') as outfile:
                 if b_model:
+		    print("Using pretrained model.")
                     subprocess.call(['fasttext', 'nnSent', model, '%s.%s' % (s,l) , '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
                 else:
                     subprocess.call(['fasttext', 'nnSent', dataset+'/tmp/model_%s_%s.bin' % (s,l), '%s.%s' % (s,l) , '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
