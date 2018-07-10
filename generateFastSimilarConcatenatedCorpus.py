@@ -32,6 +32,7 @@ target = args.target
 model = args.model
 
 b_model = model != None
+print("Using pretrained model? = ", b_model)
 
 # Create Folder
 folderName = 'similarFastConcatenated-%d' % n 
