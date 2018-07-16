@@ -42,39 +42,55 @@ subprocess.call(['mkdir','-p', 'tmp'], shell=False) # Create tmp directory
 
 # Concatenate sentences
 for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenation to test set
-    for l in [source, target]:
-	print("Start process on %s.%s parition" % (s,l)) 
-        f = open(dataset+'/'+s+'.'+l, 'r')
-	fo = open(dataset+'/'+folderName+'/'+s+'.'+l, 'w')
-        fl = f.readlines()
-	fl = [line.strip() for line in fl] # Remove \n 
-	nfl = n*['<pad>'] + fl
-        if not b_model:
-	    # Train Model using sent2vec
-            subprocess.call(['fasttext', 'sent2vec', '-input', '%s.%s' % (s,l), '-output', 'tmp/model_%s_%s' % (s,l), '-epoch', '10', '-lr', '0.2', '-wordNgrams', '5', '-loss', 'ns', '-neg', '10', '-thread', '20', '-t', '0.00005', '-dropoutK', '6', '-bucket', '6000000'], shell=False)
+    print("Start process on %s parition" % (s)) 
+    # Open source and destiantion files. For both, source and target languages.
+    f_source = open(dataset+'/'+s+'.'+ source, 'r')
+    f_target = open(dataset+'/'+s+'.'+ target, 'r')
+    fo_source = open(dataset+'/'+folderName+'/'+s+'.'+ source, 'w')
+    fo_target = open(dataset+'/'+folderName+'/'+s+'.'+ target, 'w')    
+    # Get lines
+    fl_source = f_source.readlines()
+    fl_target = f_target.readlines()
+    fl_source = [line.strip() for line in fl_source] # Remove \n 
+    fl_target = [line.strip() for line in fl_target] # Remove \n
+    nfl_source = n*['<pad>'] + fl_source
+    nfl_target = n*['<pad>'] + fl_target
 
-	# Get most similar sentences in an output file
-        with open(dataset+'/'+s+'.'+l, 'r') as infile:
-            with open(dataset+'/tmp/out.txt', 'w') as outfile:
-                if b_model:
-		    print("Using pretrained model.")
-                    subprocess.call(['fasttext', 'nnSent', model, '%s.%s' % (s,l) , '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
-                else:
-                    subprocess.call(['fasttext', 'nnSent', dataset+'/tmp/model_%s_%s.bin' % (s,l), '%s.%s' % (s,l) , '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
-     	
-	# Get the n most similar sentences
-        fo2 = open('tmp/out.txt','r')
-        fl2 = fo2.readlines()[1:-1] # Remove first line, contains log information. Last line is a \n
-	fl2 = [line.strip() for line in fl2 if line!='\n'] # Remove lines containing just \n and trim the other
-	
-	j = 1
-	for i in range(len(fl)):
-	    #print(fl2[j:j+n])
-	    #print("The Join: ", [' '.join([ll2.split()[2:] for ll2 in fl2[j:j+n]][0])])
-	    fo.write(' BREAK '.join([' '.join([ll2.split()[2:] for ll2 in fl2[j:j+n]][0])])+' BREAK '+''.join(fl[i])+'\n')
-	    j = i + n
-	#else:j = i
-	fo.close()
-        fo2.close()
+    # No need to train the model if we are using a pretrained one.
+    if not b_model:
+        # Train Model using sent2vec
+        subprocess.call(['fasttext', 'sent2vec', '-input', '%s.%s' % (s, source), '-output', 'tmp/model_%s_%s' % (s, source), '-epoch', '10', '-lr', '0.2', '-wordNgrams', '5', '-loss', 'ns', '-neg', '10', '-thread', '20', '-t', '0.00005', '-dropoutK', '6', '-bucket', '6000000'], shell=False)
+
+    # Get most similar sentences in an output file
+    with open(dataset+'/'+s+'.'+source, 'r') as infile:
+        with open(dataset+'/tmp/out.txt', 'w') as outfile:
+            if b_model:
+                print("Using pretrained model.")
+                subprocess.call(['fasttext', 'nnSent', model, '%s.%s' % (s,source) , '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
+            else:
+                subprocess.call(['fasttext', 'nnSent', dataset+'/tmp/model_%s_%s.bin' % (s,source), '%s.%s' % (s,source) , '%d' % (n+1)],stdin=infile, stdout=outfile, shell=False)
+                
+    # Get the n most similar sentences
+    fo2 = open('tmp/out.txt','r')
+    fl2_source = fo2.readlines()[1:-1] # Remove first line, contains log information. Last line is a \n
+    fl2_source = [line.strip() for line in fl2_source if line!='\n'] # Remove lines containing just \n and trim the others
+    
+    # Get the index of the extracted senteces. We want the same sentences in the target side
+    fl2_target = []
+    for sen in fl2_source:
+        index = fl_source.index(' '.join(sen.split()[2:]))
+        fl2_target.append(fl_target[index])        
+    # Write 
+    j = 1    
+    for i in range(len(fl_source)):
+        print(fl2_source[j:j+n])
+        print(fl2_target[j:j+n])
+        #print("The Join: ", [' '.join([ll2.split()[2:] for ll2 in fl2[j:j+n]][0])])
+        fo_source.write(' BREAK '.join([' '.join([ll2.split()[2:] for ll2 in fl2_source[j:j+n]][0])])+' BREAK '+''.join(fl_source[i])+'\n')
+        fo_target.write(' BREAK '.join([' '.join([ll2.split() for ll2 in fl2_target[j:j+n]][0])])+' BREAK '+''.join(fl_target[i])+'\n')
+        j = i + n
+    fo_source.close()
+    fo_target.close()
+    fo2.close()
 # Remove tmp directory
 subprocess.call(['rm','-rf', 'tmp'], shell=False)
