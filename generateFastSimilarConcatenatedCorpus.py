@@ -83,8 +83,6 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
     # Write 
     j = 1    
     for i in range(len(fl_source)):
-        print(fl2_source[j:j+n])
-        print(fl2_target[j:j+n])
         #print("The Join: ", [' '.join([ll2.split()[2:] for ll2 in fl2[j:j+n]][0])])
         fo_source.write(' BREAK '.join([' '.join([ll2.split()[2:] for ll2 in fl2_source[j:j+n]][0])])+' BREAK '+''.join(fl_source[i])+'\n')
         fo_target.write(' BREAK '.join([' '.join([ll2.split() for ll2 in fl2_target[j:j+n]][0])])+' BREAK '+''.join(fl_target[i])+'\n')
