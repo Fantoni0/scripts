@@ -54,4 +54,5 @@ for i in range(len(fl)):
         fo.write(split_s[p]+'\n')
 f.close()
 fo.close()
-fp.close()      
+if save:
+    fp.close()      
