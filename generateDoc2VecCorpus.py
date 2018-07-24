@@ -101,8 +101,6 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
         # Write
         fo_source.write(' BREAK '.join(prev_source)+ ' BREAK ' + fl_source[i] + ' BREAK '*(len(next_source)>0) + ' BREAK '.join(next_source) + '\n')        
         fo_target.write(' BREAK '.join(prev_target)+ ' BREAK ' + fl_target[i] + ' BREAK '*(len(next_target)>0) + ' BREAK '.join(next_target) + '\n')
-        if i == 2:
-            break
     f_source.close()
     f_target.close()
     fo_source.close()
