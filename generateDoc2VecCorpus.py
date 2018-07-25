@@ -87,10 +87,10 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
         prev_source = []
         prev_target = []
         inferred_vector = model.infer_vector(test_corpus[i])
-        sims = model.docvecs.most_similar([inferred_vector], topn=ps)
+        sims = model.docvecs.most_similar([inferred_vector], topn=ps+1)
         ref_sent = ' '.join(test_corpus[i])
-        for j in range(len(sims)):
-            sim_sent = ' '.join(train_corpus[sims[j][0]].words)
+        for j in range(ps):
+            sim_sent = ' '.join(train_corpus[sims[j+1][0]].words)
             idx_target = gensim_tokenized_source.index(sim_sent)
             prev_source.append(fl_source[idx_target])
             prev_target.append(fl_target[idx_target])
