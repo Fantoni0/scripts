@@ -90,8 +90,11 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
         sims = model.docvecs.most_similar([inferred_vector], topn=ps+1)
         ref_sent = ' '.join(test_corpus[i])
         for j in range(ps):
-            sim_sent = ' '.join(train_corpus[sims[j+1][0]].words)
+            sim_sent = ' '.join(train_corpus[sims[j][0]].words)	   
             idx_target = gensim_tokenized_source.index(sim_sent)
+	    if fl_source[i] == fl_source[idx_target]: # If previous sentence is the same sentence take the next one
+		sim_sent = ' '.join(train_corpus[sims[j+1][0]].words)
+	        idx_target = gensim_tokenized_source.index(sim_sent)
             prev_source.append(fl_source[idx_target])
             prev_target.append(fl_target[idx_target])
         
