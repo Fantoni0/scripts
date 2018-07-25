@@ -73,7 +73,7 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
     fl_source = f_source.readlines()
     fl_source = [line.strip() for line in fl_source] # Remove \n 
     gensim_tokenized_source = [ ' '.join(gensim.utils.simple_preprocess(line)) for line in fl_source]
-    
+   
     fl_target = f_target.readlines()
     fl_target = [line.strip() for line in fl_target] # Remove \n
 
@@ -92,7 +92,7 @@ for idx, s in enumerate(['test', 'training', 'dev']): # Do not apply concatenati
         for j in range(len(sims)):
             sim_sent = ' '.join(train_corpus[sims[j][0]].words)
             idx_target = gensim_tokenized_source.index(sim_sent)
-            prev_source.append(sim_sent)
+            prev_source.append(fl_source[idx_target])
             prev_target.append(fl_target[idx_target])
         
         # Forward context
