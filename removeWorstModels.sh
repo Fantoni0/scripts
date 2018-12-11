@@ -24,4 +24,4 @@ coco_sort.sh $1/val.coco | tail -n +$((${n_models}+1)) | cut -d "," -f 1 | while
     rm -f $1/update_${line}_*
     rm -f $1/update_${line}.h5
 done
-rm -f $1/epoch_*
+#rm -f $1/epoch_*
