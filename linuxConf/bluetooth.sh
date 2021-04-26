@@ -8,8 +8,8 @@ mkdir -p .tmp
 cd .tmp || { echo "Can't access .tmp directory"; exit 1; }
 
 ## Download files
-wget https://raw.githubusercontent.com/Realtek-OpenSource/android_hardware_realtek/rtk1395/bt/rtkbt/Firmware/BT/rtl8761b_config
-wget https://raw.githubusercontent.com/Realtek-OpenSource/android_hardware_realtek/rtk1395/bt/rtkbt/Firmware/BT/rtl8761b_fw
+wget --no-check-certificate https://raw.githubusercontent.com/Realtek-OpenSource/android_hardware_realtek/rtk1395/bt/rtkbt/Firmware/BT/rtl8761b_config
+wget --no-check-certificate https://raw.githubusercontent.com/Realtek-OpenSource/android_hardware_realtek/rtk1395/bt/rtkbt/Firmware/BT/rtl8761b_fw
 
 ## Rename and move files
 sudo mv rtl8761b_fw /usr/lib/firmware/rtl_bt/rtl8761b_fw.bin
